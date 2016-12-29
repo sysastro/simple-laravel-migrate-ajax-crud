@@ -115,8 +115,8 @@
                             $('#slug').val(data['slug']);
                             $('#content').val(data['content']);
                             $('#visitor').val(data['visitor']);
+                            $('#news-id').val(data['id']);
                             (data['is_active'] == 1 ? $('#is_active').prop('checked', true) : $('#is_active').prop('checked', false));
-                            $('#add-news').append('<input type="text" value="' + data['id'] + '" id="news-id" style="display:none;" >');
                         } else {
                             $("#error-information").html(
                                     '<div class="alert alert-danger">' +
@@ -129,7 +129,50 @@
                         me.data('requestRunning', false);
                     }
                 });
+        });
 
+        $(document).on('click', '#update-news', function (e) {
+            var me = $(this);
+
+            e.preventDefault();
+            if ( me.data('requestRunning') ) {
+                return;
+            }
+            me.data('requestRunning', true);
+
+            $.ajax({
+                url: "{{ url('/news/update') }}",
+                method: "POST",
+                data: $('#add-news').serialize(),
+                dataType: "json",
+                success: function(data) {
+                    if(data['status'] == "success"){
+                        $("#error-information").html(
+                                '<div class="alert alert-success">' +
+                                '<strong>Success</strong> Update form request success.' +
+                                '</div>'
+                        );
+                        $("#add-news").trigger('reset');
+                        reloadListNews();
+                    } else {
+                        $("#error-information").html(
+                                '<div class="alert alert-danger">' +
+                                '<strong>Error !</strong> Update form request error.' +
+                                '</div>'
+                        );
+                    }
+                },
+                error: function(xhr){
+                    $("#error-information").html(
+                            '<div class="alert alert-danger">' +
+                            '<strong>Error !</strong> Update form request error.' +
+                            '</div>'
+                    );
+                },
+                complete: function() {
+                    me.data('requestRunning', false);
+                }
+            });
         });
 
         $(document).on('click', '#cancel-news', function (e) {
@@ -143,7 +186,6 @@
             $('#submit-news').show();
             $('#update-news').hide();
             $('#cancel-news').hide();
-            $('#news-id').remove();
             $("#add-news").trigger('reset');
 
             me.data('requestRunning', false);
@@ -196,6 +238,7 @@
         <h4>Form Add News</h4>
         <form method="post" id="add-news">
             {{ csrf_field() }}
+            <input type="hidden" name="id" id="news-id">
             <div class="form-group col-lg-12" id="error-information">
 
             </div>
