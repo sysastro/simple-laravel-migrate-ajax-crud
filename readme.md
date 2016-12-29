@@ -1,27 +1,95 @@
-# Laravel PHP Framework
+# Simple Laravel Migrate Ajax CRUD
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+Laravel application with migrate example for create table in database and single page for manage data with CRUD functionallity in ajax.
+Laravel version 5.3.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+### Installing
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+Download the project on your local machine.
 
-## Official Documentation
+Change configuration in file .env for database name, username and password
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel-migrate
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+Run migrate command for create table into your database
+```
+php artisan migrate
+```
+Check on your database, if it is success it should be 4 table created : migrations, news, users, password_reset
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Open Single Page Ajax CRUD URL
+```
+http://localhost/{your folder name}/public/news
+```
 
-## Security Vulnerabilities
+## Step by step create migration file
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+1. Change configuration in file .env for database name, username and password
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel-migrate
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+2. Create migration file for some table
+```
+php artisan make:migration create_news_table --create=news
+```
+If it is success will be created file in /database/migrations/****_**_**_******_create_news_table.php
+
+3. Adjust the table fields in file migration
+There is 2 function on the class CreateNewsTable, function up for create table with the fields and function down for drop the table.
+You can adjust table field what you need in up function like this for example
+```
+    public function up()
+    {
+        Schema::create('news', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('uuid')->unique();
+            $table->string('title');
+            $table->string('slug')->nullable();
+            $table->text('content');
+            $table->integer('visitor');
+            $table->tinyInteger('is_active')->default(0);
+            $table->timestamps();
+        });
+    }
+```
+
+4. Run migrate command for create table
+```
+php artisan migrate
+```
+
+5. More info laravel migration
+[https://laravel.com/docs/5.3/migrations](https://laravel.com/docs/5.3/migrations)
+
+## The advantages of using laravel migration
+
+    1. If you need to change database from mysql into postgresql just only run : php artisan migrate
+    2. If any problem in your database and want to change to the previous version run : php artisan migrate:rollback
+    3. If any new developer need to install database run : php artisan migrate:refresh
+    etc.
+
+## Version
+
+1.0
+
+## Authors
+
+* **Siswanto** - [sysastro](http://sysastro.com)
+
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+This project is licensed under the MIT License
