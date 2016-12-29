@@ -31,7 +31,7 @@ http://localhost/{your folder name}/public/news
 
 ## Step by step create migration file
 
-1. Change configuration in file .env for database name, username and password
+### 1. Change configuration in file .env for database name, username and password
 ```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -41,13 +41,13 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-2. Create migration file for some table
+### 2. Create migration file for some table
 ```
 php artisan make:migration create_news_table --create=news
 ```
 If it is success will be created file in /database/migrations/****_**_**_******_create_news_table.php
 
-3. Adjust the table fields in file migration
+### 3. Adjust the table fields in file migration
 There is 2 function on the class CreateNewsTable, function up for create table with the fields and function down for drop the table.
 You can adjust table field what you need in up function like this for example
 ```
@@ -66,15 +66,15 @@ You can adjust table field what you need in up function like this for example
     }
 ```
 
-4. Run migrate command for create table
+### 4. Run migrate command for create table
 ```
 php artisan migrate
 ```
 
-5. More info laravel migration
+### 5. More info laravel migration
 [https://laravel.com/docs/5.3/migrations](https://laravel.com/docs/5.3/migrations)
 
-## The advantages of using laravel migration
+### The advantages of using laravel migration
 
     1. If you need to change database from mysql into postgresql just only run : php artisan migrate
     2. If any problem in your database and want to change to the previous version run : php artisan migrate:rollback
